@@ -79,21 +79,21 @@ static Local<Object> MakeBuffer(unsigned char *data, size_t size) {
 Handle<Value> GcmEncrypt(const Arguments& args) {
   HandleScope scope;
 
-  // We want 4 buffer arguments, key needs to be 16 bytes and IV needs to be
+  // We want 4 buffer arguments, key needs to be 32 bytes and IV needs to be
   // 12 bytes
   if (args.Length() < 4 || !Buffer::HasInstance(args[0]) ||
       !Buffer::HasInstance(args[1]) || !Buffer::HasInstance(args[2]) ||
-      !Buffer::HasInstance(args[3]) || Buffer::Length(args[0]) != 16 ||
+      !Buffer::HasInstance(args[3]) || Buffer::Length(args[0]) != 32 ||
       Buffer::Length(args[1]) != 12) {
-    return VException("encrypt requires a 16-byte key Buffer, a 12-byte " \
+    return VException("encrypt requires a 32-byte key Buffer, a 12-byte " \
                       "IV Buffer, a plaintext Buffer and an auth_data " \
                       "Buffer parameter");
   }
 
   // Make a buffer for the ciphertext that is the same size as the
-  // plaintext, but padded to 16 byte increments
+  // plaintext, but padded to 32 byte increments
   size_t plaintext_len = Buffer::Length(args[2]);
-  size_t ciphertext_len = (((plaintext_len - 1) / 16) + 1) * 16;
+  size_t ciphertext_len = (((plaintext_len - 1) / 32) + 1) * 32;
   unsigned char *ciphertext = new unsigned char[ciphertext_len];
   // Make a authentication tag buffer
   unsigned char *auth_tag = new unsigned char[AUTH_TAG_LEN];
@@ -142,31 +142,31 @@ Handle<Value> GcmEncrypt(const Arguments& args) {
 Handle<Value> GcmDecrypt(const Arguments& args) {
   HandleScope scope;
 
-  // We want 5 buffer arguments, key needs to be 16 bytes, IV needs to be
+  // We want 5 buffer arguments, key needs to be 32 bytes, IV needs to be
   // 12 bytes, auth_tag needs to be 16 bytes
   if (args.Length() < 5 || !Buffer::HasInstance(args[0]) ||
       !Buffer::HasInstance(args[1]) || !Buffer::HasInstance(args[2]) ||
       !Buffer::HasInstance(args[3]) || !Buffer::HasInstance(args[4]) ||
-      Buffer::Length(args[0]) != 16 || Buffer::Length(args[1]) != 12 ||
+      Buffer::Length(args[0]) != 32 || Buffer::Length(args[1]) != 12 ||
       Buffer::Length(args[4]) != 16) {
-    return VException("decrypt requires a 16-byte key Buffer, a 12-byte " \
+    return VException("decrypt requires a 32-byte key Buffer, a 12-byte " \
                       "IV Buffer, a ciphertext Buffer, an auth_data " \
                       "Buffer and a 16-byte auth_tag Buffer parameter");
   }
 
   // Make a buffer for the plaintext that is the same size as the
-  // ciphertext, but padded to 16 byte increments
+  // ciphertext, but padded to 32 byte increments
   size_t ciphertext_len = Buffer::Length(args[2]);
-  size_t plaintext_len = (((ciphertext_len - 1) / 16) + 1) * 16;
+  size_t plaintext_len = (((ciphertext_len - 1) / 32) + 1) * 32;
   unsigned char *plaintext = new unsigned char[plaintext_len];
   // Make a authentication tag buffer
   unsigned char *auth_tag = new unsigned char[AUTH_TAG_LEN];
 
-  // Init OpenSSL interace with 128-bit AES GCM cipher and give it the
+  // Init OpenSSL interace with 256-bit AES GCM cipher and give it the
   // key and IV
   int outl;
   EVP_CIPHER_CTX *ctx = EVP_CIPHER_CTX_new();
-  EVP_DecryptInit(ctx, EVP_aes_128_gcm(),
+  EVP_DecryptInit(ctx, EVP_aes_256_gcm(),
                     (unsigned char *)Buffer::Data(args[0]),
                     (unsigned char *)Buffer::Data(args[1]));
   // Set the input reference authentication tag
