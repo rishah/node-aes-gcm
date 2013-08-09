@@ -1,5 +1,5 @@
 {
-  "name": "node-aes-gcm",
+  "name": "node-aes-256-gcm",
   "version": "0.1.0",
   "description": "AES GCM module for node.js that takes advantage of GCM authentication",
   "main": "build/Release/node_aes_gcm.node",
@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/xorbit/node-aes-gcm.git"
+    "url": "https://github.com/rishah/node-aes-gcm.git"
   },
   "keywords": [
     "AES",
@@ -23,5 +23,5 @@
   "license": "MIT",
   "gypfile": true,
   "readmeFilename": "README.md",
-  "gitHead": "2cb14a93ec28eaed98fcedb0d78a2752ce7b75d4"
+  "gitHead": "b47c6c484fcc0a2270bf1206c5f89e0b64fb9b45"
 }
