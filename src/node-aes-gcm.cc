@@ -91,9 +91,9 @@ Handle<Value> GcmEncrypt(const Arguments& args) {
   }
 
   // Make a buffer for the ciphertext that is the same size as the
-  // plaintext, but padded to 32 byte increments
+  // plaintext, but padded to 16 byte increments
   size_t plaintext_len = Buffer::Length(args[2]);
-  size_t ciphertext_len = (((plaintext_len - 1) / 32) + 1) * 32;
+  size_t ciphertext_len = (((plaintext_len - 1) / 16) + 1) * 16;
   unsigned char *ciphertext = new unsigned char[ciphertext_len];
   // Make a authentication tag buffer
   unsigned char *auth_tag = new unsigned char[AUTH_TAG_LEN];
@@ -155,9 +155,9 @@ Handle<Value> GcmDecrypt(const Arguments& args) {
   }
 
   // Make a buffer for the plaintext that is the same size as the
-  // ciphertext, but padded to 32 byte increments
+  // ciphertext, but padded to 16 byte increments
   size_t ciphertext_len = Buffer::Length(args[2]);
-  size_t plaintext_len = (((ciphertext_len - 1) / 32) + 1) * 32;
+  size_t plaintext_len = (((ciphertext_len - 1) / 16) + 1) * 16;
   unsigned char *plaintext = new unsigned char[plaintext_len];
   // Make a authentication tag buffer
   unsigned char *auth_tag = new unsigned char[AUTH_TAG_LEN];
