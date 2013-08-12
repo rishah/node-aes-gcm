@@ -98,11 +98,11 @@ Handle<Value> GcmEncrypt(const Arguments& args) {
   // Make a authentication tag buffer
   unsigned char *auth_tag = new unsigned char[AUTH_TAG_LEN];
 
-  // Init OpenSSL interace with 128-bit AES GCM cipher and give it the
+  // Init OpenSSL interace with 256-bit AES GCM cipher and give it the
   // key and IV
   int outl;
   EVP_CIPHER_CTX *ctx = EVP_CIPHER_CTX_new();
-  EVP_EncryptInit(ctx, EVP_aes_128_gcm(),
+  EVP_EncryptInit(ctx, EVP_aes_256_gcm(),
                     (unsigned char *)Buffer::Data(args[0]),
                     (unsigned char *)Buffer::Data(args[1]));
   // Pass additional authenticated data
